@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-DATABASE = "biblioteca.db"
+DATABASE = os.getenv("DATABASE_PATH", "biblioteca.db")
 
 def conectar():
     conn = sqlite3.connect(DATABASE)
