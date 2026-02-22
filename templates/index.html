@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <div class="panel-header">
+        <div class="title-row">
+            <div>
+                <h3 class="mb-1">Acervo</h3>
+                <p class="muted">Controle completo de disponibilidade e emprestimos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <form method="GET" class="row g-2 mb-3">
+            <div class="col-md-10">
+                <input type="text" name="busca" value="{{ request.args.get('busca', '') }}" class="form-control" placeholder="Buscar por titulo">
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Ano</th>
+                        <th>Status</th>
+                        <th class="text-end">Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if livros %}
+                        {% for livro in livros %}
+                            <tr>
+                                <td>{{ livro.id }}</td>
+                                <td>{{ livro.titulo }}</td>
+                                <td>{{ livro.autor }}</td>
+                                <td>{{ livro.ano }}</td>
+                                <td>
+                                    {% if livro.disponivel == 1 %}
+                                        <span class="badge badge-soft badge-soft-success">disponivel</span>
+                                    {% else %}
+                                        <span class="badge badge-soft badge-soft-danger">indisponivel</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
+                                        <a href="{{ url_for('editar', id_livro=livro.id) }}" class="btn btn-warning btn-sm">Editar</a>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('remover', id_livro=livro.id) }}"
+                                            class="d-inline js-confirm-action"
+                                            data-confirm-title="Remover livro"
+                                            data-confirm-message="Deseja remover este livro do acervo?"
+                                            data-confirm-button="Remover"
+                                            data-confirm-variant="btn-danger"
+                                        >
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                                        </form>
+
+                                        {% if livro.disponivel == 1 %}
+                                            <a href="{{ url_for('emprestar', id_livro=livro.id) }}" class="btn btn-secondary btn-sm">Emprestar</a>
+                                        {% else %}
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for('devolver', id_livro=livro.id) }}"
+                                                class="d-inline js-confirm-action"
+                                                data-confirm-title="Registrar devolucao"
+                                                data-confirm-message="Confirma a devolucao deste livro?"
+                                                data-confirm-button="Confirmar"
+                                                data-confirm-variant="btn-success"
+                                            >
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                                <button type="submit" class="btn btn-success btn-sm">Devolver</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 muted">Nenhum livro encontrado para esse filtro.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

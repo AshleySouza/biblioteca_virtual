@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <div class="panel-header">
+        <h3 class="mb-1">Emprestar Livro</h3>
+    </div>
+
+    <div class="panel-body">
+        <form method="POST" class="row g-3 js-confirm-action" data-confirm-title="Confirmar emprestimo" data-confirm-message="Deseja confirmar o emprestimo para o usuario selecionado?" data-confirm-button="Emprestar" data-confirm-variant="btn-primary">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="col-md-8">
+                <label class="form-label">Selecione o usuario</label>
+                <select name="usuario_id" class="form-select" required>
+                    {% for usuario in usuarios %}
+                        <option value="{{ usuario.id }}">{{ usuario.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Confirmar Emprestimo</button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
+

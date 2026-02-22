@@ -1,0 +1,96 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <div class="panel-header">
+        <div class="title-row">
+            <div>
+                <h3 class="mb-1">Usuarios</h3>
+                <p class="muted">Gerencie papeis de acesso com seguranca.</p>
+            </div>
+            <span class="badge text-bg-light border">Total: {{ total }}</span>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <form method="GET" class="row g-2 mb-3">
+            <div class="col-md-10">
+                <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Buscar por nome ou email">
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Tipo</th>
+                        <th class="text-end">Acao</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if usuarios %}
+                        {% for usuario in usuarios %}
+                            <tr>
+                                <td>{{ usuario.id }}</td>
+                                <td>{{ usuario.nome }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>
+                                    {% if usuario.tipo == "admin" %}
+                                        <span class="badge badge-soft badge-soft-success">admin</span>
+                                    {% else %}
+                                        <span class="badge badge-soft badge-soft-danger">usuario</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if usuario.id == current_user.id %}
+                                        <span class="text-muted small">sua conta</span>
+                                    {% else %}
+                                        <form method="POST" action="{{ url_for('atualizar_tipo_usuario', id_usuario=usuario.id) }}" class="d-inline-flex gap-2 js-confirm-action" data-confirm-title="Alterar permissao" data-confirm-message="Deseja atualizar o tipo de conta deste usuario?" data-confirm-button="Atualizar" data-confirm-variant="btn-primary">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <select class="form-select form-select-sm" name="tipo">
+                                                <option value="usuario" {% if usuario.tipo == "usuario" %}selected{% endif %}>usuario</option>
+                                                <option value="admin" {% if usuario.tipo == "admin" %}selected{% endif %}>admin</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-primary" type="submit">Salvar</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 muted">Nenhum usuario encontrado.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if total_paginas > 1 %}
+            <nav aria-label="Paginacao de usuarios">
+                <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item {% if pagina <= 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('usuarios', q=q, page=pagina-1) }}">Anterior</a>
+                    </li>
+                    {% for numero in range(1, total_paginas + 1) %}
+                        <li class="page-item {% if numero == pagina %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('usuarios', q=q, page=numero) }}">{{ numero }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="page-item {% if pagina >= total_paginas %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('usuarios', q=q, page=pagina+1) }}">Proxima</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+

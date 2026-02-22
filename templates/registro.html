@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<section class="auth-wrap">
+    <div class="auth-card p-4 p-lg-5">
+        <h3 class="text-center mb-3">Criar Conta</h3>
+        <p class="text-center muted mb-4">Seu perfil sera criado como usuario comum.</p>
+
+        <form method="POST" class="row g-3 js-confirm-action" data-confirm-title="Criar conta" data-confirm-message="Confirma o cadastro desta nova conta?" data-confirm-button="Cadastrar" data-confirm-variant="btn-primary">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="col-12">
+                <label class="form-label">Nome</label>
+                <input type="text" name="nome" class="form-control" required>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Senha</label>
+                <input type="password" name="senha" class="form-control" required>
+            </div>
+
+            <div class="col-12 d-grid">
+                <button class="btn btn-primary">Cadastrar</button>
+            </div>
+        </form>
+
+        <hr>
+        <p class="text-center mb-0">Ja possui conta? <a href="{{ url_for('login') }}">Fazer login</a></p>
+    </div>
+</section>
+
+{% endblock %}
+

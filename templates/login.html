@@ -1,0 +1,33 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<section class="auth-wrap">
+    <div class="auth-card p-4 p-lg-5">
+        <h3 class="text-center mb-3">Bem-vindo</h3>
+        <p class="text-center muted mb-4">Entre para acessar o sistema da biblioteca.</p>
+
+        <form method="POST" class="row g-3 js-confirm-action" data-confirm-title="Entrar" data-confirm-message="Deseja entrar com estas credenciais?" data-confirm-button="Entrar" data-confirm-variant="btn-primary">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="col-12">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Senha</label>
+                <input type="password" name="senha" class="form-control" required>
+            </div>
+
+            <div class="col-12 d-grid">
+                <button class="btn btn-primary">Entrar</button>
+            </div>
+        </form>
+
+        <hr>
+        <p class="text-center mb-0">Nao tem conta? <a href="{{ url_for('registro') }}">Criar cadastro</a></p>
+    </div>
+</section>
+
+{% endblock %}
+
