@@ -3,7 +3,7 @@ services:
     name: biblioteca-virtual
     runtime: python
     plan: starter
-    rootDir: .
+    rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
