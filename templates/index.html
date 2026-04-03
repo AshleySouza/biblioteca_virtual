@@ -11,6 +11,12 @@
         </div>
     </div>
 
+    {% if primeiro_login %}
+    <div class="alert alert-info">
+        <strong>Primeiro Login:</strong> Use as credenciais padrão para admin: <code>admin@admin.com</code> / <code>admin</code>
+    </div>
+    {% endif %}
+
     <div class="panel-body">
         <form method="GET" class="row g-2 mb-3">
             <div class="col-md-10">

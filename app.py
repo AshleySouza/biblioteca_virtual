@@ -23,6 +23,22 @@ app.secret_key = os.getenv("SECRET_KEY", "dev-insecure-change-me")
 
 criar_tabelas()
 
+def _criar_admin_padrao():
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) AS total FROM usuarios")
+    total = cursor.fetchone()["total"]
+    if total == 0:
+        senha_hash = generate_password_hash("admin")
+        cursor.execute(
+            "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)",
+            ("Admin", "admin@admin.com", senha_hash, "admin"),
+        )
+        conn.commit()
+    conn.close()
+
+_criar_admin_padrao()
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -190,7 +206,16 @@ def index():
     if current_user.tipo == "admin":
         termo = request.args.get("busca", "").strip()
         livros = buscar_por_titulo(termo) if termo else listar_livros()
-        return render_template("index.html", livros=livros)
+        
+        # Verificar se é o primeiro login (apenas admin padrão)
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) AS total FROM usuarios")
+        total_usuarios = cursor.fetchone()["total"]
+        conn.close()
+        primeiro_login = total_usuarios == 1
+        
+        return render_template("index.html", livros=livros, primeiro_login=primeiro_login)
 
     livros = _listar_livros_do_usuario(current_user.id)
     return render_template("meus_livros.html", livros=livros)
