@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="auth-wrap">
+    <div class="auth-card p-4 p-lg-5">
+        <h3 class="text-center mb-3">Trocar Senha Admin</h3>
+        <p class="text-center muted mb-4">Altere sua senha de administrador.</p>
+
+        <form method="POST" class="row g-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="col-12">
+                <label class="form-label">Senha atual</label>
+                <input type="password" name="senha_atual" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Nova senha</label>
+                <input type="password" name="nova_senha" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Confirmar nova senha</label>
+                <input type="password" name="confirmar_senha" class="form-control" required>
+            </div>
+
+            <div class="col-12 d-grid">
+                <button class="btn btn-primary">Atualizar senha</button>
+            </div>
+        </form>
+
+        <hr>
+        <p class="text-center mb-0"><a href="{{ url_for('usuarios') }}">Voltar para Usuários</a></p>
+    </div>
+</section>
+
+{% endblock %}

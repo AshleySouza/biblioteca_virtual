@@ -90,6 +90,12 @@
             </nav>
         {% endif %}
         </div>
+
+        <div class="mt-4 p-3 border rounded bg-light">
+            <h5>Trocar senha de administrador</h5>
+            <p class="muted mb-2">Se você for admin, clique abaixo para atualizar sua senha segura.</p>
+            <a href="{{ url_for('trocar_senha_admin') }}" class="btn btn-sm btn-outline-primary">Trocar senha</a>
+        </div>
     </section>
 
     <section class="panel mt-4">

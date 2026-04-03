@@ -172,6 +172,80 @@ def login():
     return render_template("login.html", primeiro_acesso=primeiro_acesso)
 
 
+@app.route("/recuperar-senha", methods=["GET", "POST"])
+def recuperar_senha():
+    if request.method == "POST":
+        email = request.form["email"].strip().lower()
+        nova_senha = request.form["senha"]
+        confirmar_senha = request.form["confirmar_senha"]
+
+        if nova_senha != confirmar_senha:
+            flash("As senhas nao coincidem.", "danger")
+            return render_template("recuperar_senha.html")
+
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
+        usuario = cursor.fetchone()
+
+        if not usuario:
+            conn.close()
+            flash("Usuario nao encontrado", "warning")
+            return render_template("recuperar_senha.html")
+
+        cursor.execute(
+            "UPDATE usuarios SET senha = ? WHERE id = ?",
+            (generate_password_hash(nova_senha), usuario["id"]),
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Senha atualizada com sucesso. Faça login com a nova senha.", "success")
+        return redirect(url_for("login"))
+
+    return render_template("recuperar_senha.html")
+
+
+@app.route("/admin/trocar-senha", methods=["GET", "POST"])
+@login_required
+def trocar_senha_admin():
+    if current_user.tipo != "admin":
+        flash("Acesso restrito ao administrador!", "danger")
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        senha_atual = request.form["senha_atual"]
+        nova_senha = request.form["nova_senha"]
+        confirmar_senha = request.form["confirmar_senha"]
+
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute("SELECT senha FROM usuarios WHERE id = ?", (current_user.id,))
+        usuario = cursor.fetchone()
+
+        if not usuario or not check_password_hash(usuario["senha"], senha_atual):
+            conn.close()
+            flash("Senha atual incorreta.", "danger")
+            return redirect(url_for("trocar_senha_admin"))
+
+        if nova_senha != confirmar_senha:
+            conn.close()
+            flash("As senhas novas nao coincidem.", "danger")
+            return redirect(url_for("trocar_senha_admin"))
+
+        cursor.execute(
+            "UPDATE usuarios SET senha = ? WHERE id = ?",
+            (generate_password_hash(nova_senha), current_user.id),
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Senha de administrador atualizada com sucesso.", "success")
+        return redirect(url_for("usuarios"))
+
+    return render_template("trocar_senha_admin.html")
+
+
 @app.route("/logout", methods=["POST"])
 @login_required
 def logout():
