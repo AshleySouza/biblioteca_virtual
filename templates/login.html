@@ -6,6 +6,12 @@
         <h3 class="text-center mb-3">Bem-vindo</h3>
         <p class="text-center muted mb-4">Entre para acessar o sistema da biblioteca.</p>
 
+        {% if primeiro_acesso %}
+        <div class="alert alert-info">
+            <strong>Primeiro Acesso:</strong> Use as credenciais padrão para admin: <code>admin@admin.com</code> / <code>admin</code>
+        </div>
+        {% endif %}
+
         <form method="POST" class="row g-3 js-confirm-action" data-confirm-title="Entrar" data-confirm-message="Deseja entrar com estas credenciais?" data-confirm-button="Entrar" data-confirm-variant="btn-primary">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 

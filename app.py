@@ -161,7 +161,15 @@ def login():
 
         flash("Email ou senha invalidos.", "danger")
 
-    return render_template("login.html")
+    # Verificar se é primeiro acesso
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) AS total FROM usuarios")
+    total = cursor.fetchone()["total"]
+    conn.close()
+    primeiro_acesso = total <= 1
+
+    return render_template("login.html", primeiro_acesso=primeiro_acesso)
 
 
 @app.route("/logout", methods=["POST"])
