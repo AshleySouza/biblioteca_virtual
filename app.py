@@ -214,16 +214,7 @@ def index():
     if current_user.tipo == "admin":
         termo = request.args.get("busca", "").strip()
         livros = buscar_por_titulo(termo) if termo else listar_livros()
-        
-        # Verificar se é o primeiro login (apenas admin padrão)
-        conn = conectar()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) AS total FROM usuarios")
-        total_usuarios = cursor.fetchone()["total"]
-        conn.close()
-        primeiro_login = total_usuarios == 1
-        
-        return render_template("index.html", livros=livros, primeiro_login=primeiro_login)
+        return render_template("index.html", livros=livros)
 
     livros = _listar_livros_do_usuario(current_user.id)
     return render_template("meus_livros.html", livros=livros)
