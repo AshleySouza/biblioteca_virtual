@@ -89,8 +89,31 @@
                 </ul>
             </nav>
         {% endif %}
-    </div>
-</section>
+        </div>
+    </section>
+
+    <section class="panel mt-4">
+        <div class="panel-header">
+            <div class="title-row">
+                <div>
+                    <h3 class="mb-1">Manual de Uso (Admin)</h3>
+                    <p class="muted">Guia rápido para gerenciar a biblioteca e os usuários.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ol>
+                <li><strong>Visão Geral:</strong> Utilize o menu superior para navegar entre <strong>Inicio</strong>, <strong>Adicionar</strong> e <strong>Usuarios</strong>.</li>
+                <li><strong>Adicionar Livro:</strong> Acesse <strong>Adicionar</strong>, preencha título, autor e ano; depois clique em "Salvar". O livro fica disponível imediatamente.</li>
+                <li><strong>Editar/Remover Livros:</strong> Na tela <strong>Inicio</strong>, use os botões <em>Editar</em> ou <em>Remover</em> na linha do livro desejado. A remoção exige confirmação.</li>
+                <li><strong>Emprestar/Devolver:</strong> Se o livro estiver disponível, clique em <em>Emprestar</em> e selecione um usuário. Se estiver emprestado, use <em>Devolver</em> para liberá-lo.</li>
+                <li><strong>Gerenciar Usuários:</strong> Nesta página, pesquise usuários por nome/email; altere o tipo de conta entre <code>usuario</code> e <code>admin</code>. Evite remover o último admin.</li>
+                <li><strong>Segurança:</strong> O sistema exige token CSRF em todos os formulários POST. NÃo compartilhe suas credenciais.</li>
+                <li><strong>Primeiro login:</strong> Na primeira vez, use <code>admin@admin.com</code> / <code>admin</code>. Altere a senha criando um novo usuário e atualizando o banco depois.</li>
+            </ol>
+        </div>
+    </section>
 
 {% endblock %}
 
